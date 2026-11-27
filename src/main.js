@@ -15,6 +15,8 @@ k.loadRoot("./");
 k.loadSprite("perso", "sprites/thibaudrunner-personnage.png");
 k.loadSprite("garde", "sprites/thibaud.jpeg");
 k.loadSprite("tesla", "sprites/images.jpeg");
+k.loadSound("pompe", "sprites/" + encodeURIComponent("Fortnite Pump Shotgun Sound Effect. Legendary  Pump. (SFX).mp3"));
+k.loadSound("boulevard", "sprites/Boulevard-du-Port.mp3");
 
 // ─── Petits outils ───
 
@@ -177,6 +179,7 @@ player.onCollide("cle", (cle) => {
 player.onCollide("tesla", (t) => {
     t.destroy();
     enTesla = true;
+    k.play("boulevard", { loop: true, volume: 0.6 }); // musique en boucle tant qu'on est en Tesla
     player.use(k.sprite("tesla", { width: 20, height: 20 }));
     player.area.scale = k.vec2(0.6); // on ne remet pas area() : body() en a besoin (sinon crash)
     message("Tesla Model Y ! Écrase tous les gardes !");
@@ -198,7 +201,9 @@ player.onCollide("porte", (porte) => {
 // Toucher un garde : en Tesla on l'écrase, sinon retour à la dernière porte ouverte
 player.onCollide("garde", (g) => {
     if (enTesla) {
+        k.play("pompe");
         g.destroy();
+        k.play("pompe"); // bruit de pompe quand on écrase un Thibaud
         k.shake(3);
         if (k.get("garde").length === 0) message("Tous les gardes sont KO ! File à la sortie !");
         return;
